@@ -5,15 +5,10 @@
 #include <TPad.h>
 #include <TFile.h>
 #include <TStopwatch.h>
-#include <TSystem.h>
 #include "Math/Integrator.h"
 #include "RLAfuncs.cxx"
 #include "Qfuncs.cxx"
 
-//TList* hList = new TList();      // list of histograms to store
-TDatime now;
-//TFile* outfile = new TFile(Form("PRF_all_%i.root",now.Convert()), "RECREATE");
-TFile* outfile = new TFile("PRF_all.root", "RECREATE");
 TF1 *fRLA, *fQ, *f_12;
 
 double Func_1(double *, double *);// "detector response" function
@@ -54,7 +49,7 @@ Other than that, this is exactly the convolution code that
 Klaus has posted on the skipper physics link.
 */
 
-void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
+void ConvoluteLoop(double * maspar, double * relativepos)
 {
   TStopwatch clock;
   clock.Start();
@@ -70,13 +65,9 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
   double xh = relativepos[1]; 
   double yl = relativepos[2];
   double yh = relativepos[3];
-  unsigned int li = relativepos[4];
-  unsigned int lx = relativepos[5];
-  unsigned int ly = relativepos[6];
-
   char newname[40];
-  sprintf(newname,"PRF_li_%i_lx_%i_ly_%i",li, lx, ly);
-  //TFile* outfile = new TFile(Form("%s.root",newname), "RECREATE");
+  sprintf(newname,"PRF_xl_%g_xh_%g_yl_%g_yh_%g",xl,xh,yl,yh);
+  TFile* outfile = new TFile(Form("%s.root",newname), "RECREATE");
   double tmin = 0; double tmax = 2000;//, tc = 25; // in ns
   fRLA = new TF1("fRLA", Func_1, tmin, tmax, 4);// 4 params: t_R, sigmaL, t_r, t_f;
   fQ = new TF1("fQ", Func_2, tmin, tmax, 5);// 5 params: xl, xh, yl, yh, w
@@ -108,33 +99,25 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
       double maxInt = 0;
       //~~Loop over t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       for (int it = 1; it <= n; ++it)
-	{
-	  tt = tmin + dt*it; 
-	  cumInt->SetBinContent(it, f_12->Integral(tmin,tt));
+  {
+    tt = tmin + dt*it; 
+    cumInt->SetBinContent(it, f_12->Integral(tmin,tt));
 
-	  if(f_12->Integral(tmin,tt) > maxInt)
-	    {
-	      maxInt = f_12->Integral(tmin,tt);
-	    }
-	}
+    if(f_12->Integral(tmin,tt) > maxInt)
+      {
+        maxInt = f_12->Integral(tmin,tt);
+      }
+  }
       
-      cumConv->SetBinContent(iT, maxInt);//cumInt->GetBinContent(n));
+      cumConv->SetBinContent(iT, -maxInt);//cumInt->GetBinContent(n));
     }
+  //cumConv->SetBinContent(n, 1.0E-24);//cumInt->GetBinContent(n));
   cumConv->GetXaxis()->SetTitle("Time in ns");
-  //cumConv->Draw();
-  cumConv->GetYaxis()->SetRangeUser(0,5000);
+  cumConv->Draw();
+  cumConv->GetYaxis()->SetRangeUser(-5000,0);
   cumConv->SetName(newname);
-  //hList->Add(Form("%s",newname));
-
   cumConv->Write(newname,TObject::kWriteDelete);
-  cumInt->Delete();
-  if(endOfLoop) 
-    {
-      //hList->Write();      
-      cout << "Closing histogram-file." << endl;
-      outfile->Close();
-      gSystem->Rename("PRF_all.root",Form("PRF_all_%i.root",now.Convert()));
-    }
+  outfile->Close();
   clock.Stop();
-  cout << " Overall time: "; clock.Print(); cout << endl;
+  cout << endl; clock.Print(); cout << endl;
 }

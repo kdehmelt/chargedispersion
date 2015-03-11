@@ -1,10 +1,8 @@
 #include "aragorn.h"
 #include "quink.C"
 #include <iostream>
-#include <TCanvas.h>
+#include "TCanvas.h"
 #include <TStopwatch.h>
-#include <TFile.h>
-#include <Riostream.h>
 
 using namespace std;
 
@@ -48,31 +46,19 @@ void aragorn::SetChargeCloud(double a, double b)
 
 void aragorn::Event()
 {
-  int lxmax, lymax;
-  double x1, y1, stSzX, stSzY; //x and y coordinate of charge cloud and stepsize for PRF
-  ifstream in;
-  in.open("prfinput.dat");//Form("%sbasic.dat",dir.Data()))
-  /*
-  cout << " Where should the charge cloud hit? (5 mm, 6 (9) mm for Dixit setup)" << endl;
-  cout << " How many steps in x/y?" << endl;
-  cout << " PRF Step-size in x/y-direction in mm?" << endl;
-
-  cin >> x1 >> y1 >> lxmax >> lymax >> stSzX >> stSzY;
-*/
-  in >> x1 >> y1 >> lxmax >> lymax >> stSzX >> stSzY;
-  cout << " The charge cloud will be at x0 = " << x1 << " and y0 = " << y1 << endl;
-  cout << lxmax << " steps in x, " << lymax << " steps in y." << endl; 
-  cout << " PRF Step-size in x/y-direction is " << stSzX << " / " << stSzY << endl;
-
-  //TCanvas* c1 = new TCanvas("c1", "Readout", 800, 600);
-  //c1->Divide(columns,rows);
+  double x1,y1; //x and y coordinate of charge cloud 
+  
+  cout << "Where should the charge cloud hit?" << endl;
+  cin >> x1 >> y1;
+  cout << "The charge cloud will be at x0 = " << x1 << " and y0 = " << y1 << endl;
+  TCanvas* c1 = new TCanvas("c1", "Readout", 800, 600);
+  c1->Divide(columns,rows);
   TStopwatch loopclock;
   loopclock.Start();
-  bool endOfLoop = false;
-  for(unsigned int i =1; i<=TheQuinks.size(); i++)
+  for(unsigned int i =1;i<=TheQuinks.size();i++)
     {
-      //c1->cd(i);
-      TheQuinks[i-1]->Display(matpar, x1, y1, lxmax, lymax, stSzX, stSzY, i, endOfLoop);
+      c1->cd(i);
+      TheQuinks[i-1]->Display(matpar, x1, y1);
       cout<<i<<" Pad(s) have been calculated for.\n";
     }
   loopclock.Stop();

@@ -24,8 +24,8 @@ using namespace TMath;
 double Qfuncs::PadRect(double tt, double xl, double xh, double yl, double yh, double w)
 {
   // Calculate dispersion of charge across 2-D resistive anode 
-  double N = 10000;// in q_e, 8000 is typical COMPASS GEM value
-  double R = 5.3E05;//530000;// Ohms per square
+  double N = 3500;// in q_e, 8000 is typical COMPASS GEM value
+  double R = 2.5E09;//530000;// Ohms per square
   double C = 0.21E-12;// 0.21pF/mm^2
   //double w = 250E-3;// in mm
   /*
@@ -40,11 +40,11 @@ double Qfuncs::PadRect(double tt, double xl, double xh, double yl, double yh, do
   double ttn=-999;
   if(tt>0)
     {
-      ttn=tt/double(1000000000);
+      ttn=tt/1000000000.;
       double S = Sqrt(4*ttn/(R*C)+2*Power(w,2));
       double diffxErf = Erf(xh/S)-Erf(xl/S);
       double diffyErf = Erf(yh/S)-Erf(yl/S);      
-      Qpad = N/double(4) * ( diffxErf*diffyErf );
+      Qpad = N/4 * ( diffxErf*diffyErf );
     }
   else
     {
