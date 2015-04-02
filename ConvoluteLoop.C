@@ -73,8 +73,12 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
   unsigned int li = relativepos[4];
   unsigned int lx = relativepos[5];
   unsigned int ly = relativepos[6];
+  double x0 = relativepos[7];
+  double y0 = relativepos[8];
 
   char newname[40];
+  char histofilename[40];
+  char logfilename[40];
   sprintf(newname,"PRF_li_%i_lx_%i_ly_%i",li, lx, ly);
   //TFile* outfile = new TFile(Form("%s.root",newname), "RECREATE");
   double tmin = 0; double tmax = 2000;//, tc = 25; // in ns
@@ -88,8 +92,8 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
   double tcplus = 0;
   double dt = (tmax-tmin)/double(n);
   cout << "dt is " << dt << " ns" << endl;
-  char name[40];
-  sprintf(name,"(%g,%g) to (%g,%g)",xl,yl,xh,yh);
+  char name[80];
+  sprintf(name,"(%2.2f,%2.2f) to (%2.2f,%2.2f) with chg-ctr at (%2.2f,%2.2f)",xl,yl,xh,yh,x0,y0);
   TH1D *cumConv = new TH1D("Signal",name, n, tmin, tmax);
   cumConv->Reset();
   TH1D *cumInt = new TH1D("cumInt", "", n, tmin, tmax);
@@ -121,6 +125,7 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
       cumConv->SetBinContent(iT, maxInt);//cumInt->GetBinContent(n));
     }
   cumConv->GetXaxis()->SetTitle("Time in ns");
+  cumConv->GetYaxis()->SetTitle("Charge in a.u.");
   //cumConv->Draw();
   cumConv->GetYaxis()->SetRangeUser(0,5000);
   cumConv->SetName(newname);
@@ -133,7 +138,12 @@ void ConvoluteLoop(double * maspar, double * relativepos, bool endOfLoop)
       //hList->Write();      
       cout << "Closing histogram-file." << endl;
       outfile->Close();
-      gSystem->Rename("PRF_all.root",Form("PRF_all_%i.root",now.Convert()));
+      int timenow = now.Convert();
+      sprintf(histofilename,"PRF_all_%i.root",timenow);
+      sprintf(logfilename,"output_%i.log",timenow);
+      gSystem->Rename("PRF_all.root",histofilename);//Form("PRF_all_%i.root",now.Convert()));
+      gSystem->Rename("output.log",logfilename);//Form("output_%i.log",now.Convert()));
+      cout << " Histos/logs in " << histofilename << "/" << logfilename << endl;
     }
   clock.Stop();
   cout << " Overall time: "; clock.Print(); cout << endl;

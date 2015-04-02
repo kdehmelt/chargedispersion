@@ -8,7 +8,7 @@
 
 using namespace std;
 
-double matpar [5] = {40, 50, 13, 40, 2000}; //Parameters of the materials and the detector
+double matpar [5] = {40, 50, 13, 40, 2000}; //Parameters of the materials and the detector/electronics
 
 aragorn *aragorn::__instance=0;
 
@@ -49,7 +49,7 @@ void aragorn::SetChargeCloud(double a, double b)
 void aragorn::Event()
 {
   int lxmax, lymax;
-  double x1, y1, stSzX, stSzY; //x and y coordinate of charge cloud and stepsize for PRF
+  double x0, y0, stSzX, stSzY; //x and y coordinate of charge cloud and stepsize for PRF
   ifstream in;
   in.open("prfinput.dat");//Form("%sbasic.dat",dir.Data()))
   /*
@@ -57,10 +57,10 @@ void aragorn::Event()
   cout << " How many steps in x/y?" << endl;
   cout << " PRF Step-size in x/y-direction in mm?" << endl;
 
-  cin >> x1 >> y1 >> lxmax >> lymax >> stSzX >> stSzY;
+  cin >> x0 >> y0 >> lxmax >> lymax >> stSzX >> stSzY;
 */
-  in >> x1 >> y1 >> lxmax >> lymax >> stSzX >> stSzY;
-  cout << " The charge cloud will be at x0 = " << x1 << " and y0 = " << y1 << endl;
+  in >> x0 >> y0 >> lxmax >> lymax >> stSzX >> stSzY;
+  cout << " The charge cloud will be at x0 = " << x0 << " and y0 = " << y0 << endl;
   cout << lxmax << " steps in x, " << lymax << " steps in y." << endl; 
   cout << " PRF Step-size in x/y-direction is " << stSzX << " / " << stSzY << endl;
 
@@ -72,8 +72,8 @@ void aragorn::Event()
   for(unsigned int i =1; i<=TheQuinks.size(); i++)
     {
       //c1->cd(i);
-      TheQuinks[i-1]->Display(matpar, x1, y1, lxmax, lymax, stSzX, stSzY, i, endOfLoop);
-      cout<<i<<" Pad(s) have been calculated for.\n";
+      TheQuinks[i-1]->Display(matpar, x0, y0, lxmax, lymax, stSzX, stSzY, i, endOfLoop);
+      cout<< i <<" Pad(s) have been calculated for.\n";
     }
   loopclock.Stop();
   cout << endl; loopclock.Print(); cout << endl;

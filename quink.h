@@ -21,10 +21,12 @@ class quink
  public:
   quink(double, double, double, double);  
   virtual ~quink() {}
+  /*
   double Getxl(){return xl;}
   double Getxh(){return xh;}
   double Getyl(){return yl;}
   double Getyh(){return yh;}
+*/
   void Display(double t[5], double &x, double &y, int &ix, int &iy, double &sX, double &sY, unsigned int &i, bool &endOfLoop);
   void Report();
   
