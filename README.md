@@ -1,19 +1,9 @@
 # chargedispersion
 
--- KD, Mar 31, 2015 --
+-- KD, April 02, 2015 --
+PLEASE REFER to README.txt for better visibility of sketches.
  
 Simulation of MPGD charge dispersion for various readout structures.
-Pad structure:
-
-y/ ^                 pad index
-mm |                 ^
-   |                /
-12 |--|--|--|--|--|/
-   |6 |7 |8 |9 |10|
- 6 |--|--|--|--|--|
-   |1 |2 |3 |4 |5 |
- 0 |-------------------->x/mm
-   0  2  4  6  8  10
 
 The pad "index" runs from 1 at corner (0,0) in a meander up to 10 at (8,6) with
 pad-size 2x6 mm^2
