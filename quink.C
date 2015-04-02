@@ -38,7 +38,7 @@ void quink::Display(double t[5], double &x0, double &y0, int &lxmax, int &lymax,
 	  cout << " relXl, relXh, relYl, relYh -- " << relativepos[0] << " -- " << relativepos[1] << " -- " << relativepos[2] << " -- " << relativepos[3] << endl;
 	  // Pass the array with all of the material constants
 	  // and the relative position to the convolution
-	  if(lx == lxmax && ly == lymax && li == 6) endOfLoop = true;
+	  if(lx == lxmax && ly == lymax && li == 10) endOfLoop = true;
 	  ConvoluteLoop(t,relativepos,endOfLoop);
 	}
     }

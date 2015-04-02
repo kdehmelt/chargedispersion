@@ -31,7 +31,7 @@ class aragorn
   
   static const int hw=1;    //half of the width of each pad
   static const int hh=3;    //half of the height of each pad
-  static const int columns = 3; //How many pads in a row
+  static const int columns = 5; //How many pads in a row
   static const int rows = 2; // How many pads in each column
 
   void Report();
