@@ -105,7 +105,7 @@ void ConvoluteLoop(double * maspar, double * relativepos, char name[], char file
       }
   }
       
-      cumConv->SetBinContent(iT, maxInt);//cumInt->GetBinContent(n)); WE ARE HERE
+      cumConv->SetBinContent(iT, maxInt);//cumInt->GetBinContent(n));
     }
   cumConv->GetXaxis()->SetTitle("Time in ns");
   cumConv->Write();
