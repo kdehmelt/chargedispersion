@@ -6,7 +6,6 @@
 #include <TSystem.h>
 #include <fstream>
 #include <TFile.h>
-#include <TLatex.h>
 
 using namespace std;
 
@@ -201,7 +200,7 @@ for (int r = 0; r <rev; ++r)
       for (int k = 0; k<TheQuinks.size(); ++k)
       {
         if(k==1){newFile=false;}
-        sprintf(name,"PRF_li_%i_lx_%i_ly_%i",k+1,i,j);
+        sprintf(name,"PRF_li_%i_lx_%i_ly_%i_lr_%i",k+1,i,j,matpar[5]/100000);
         TheQuinks[k]->ToFile(matpar, xtemp, ytemp, name, filename, newFile);
       }
       cout<<i+1<<" x-event done."<<endl;
