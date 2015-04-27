@@ -21,11 +21,7 @@ class quink
  public:
   quink(double, double, double, double);  
   virtual ~quink() {}
-  double Getxl(){return xl;}
-  double Getxh(){return xh;}
-  double Getyl(){return yl;}
-  double Getyh(){return yh;}
-  void Display(double t[5], double &x, double &y);
+  void ToFile(double t[5], double &x, double &y,char n[],char fn[], bool e);
   void Report();
   
 };
