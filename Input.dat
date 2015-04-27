@@ -1,0 +1,5 @@
+7 3 .5 1 11 4 1000 -200 4
+
+X-start, Y-start, x-stepsize, y-stepsize, steps-in-x, steps-in-y, R-start, R-step, steps-in-R
+
+Number of steps include the 0 step! 
