@@ -17,15 +17,16 @@
 
 #include "Qfuncs.h"
 #include "TMath.h"
+#include "iostream"
 
 using namespace TMath;
 
 //______________________________________________________________________________
-double Qfuncs::PadRect(double tt, double xl, double xh, double yl, double yh, double w)
+double Qfuncs::PadRect(double tt, double xl, double xh, double yl, double yh, double R)
 {
   // Calculate dispersion of charge across 2-D resistive anode 
-  double N = 8000;// in q_e, typical COMPASS GEM value
-  double R = 2*530000;// Ohms per square
+  double N = 10000;// in q_e, 8000 is typical COMPASS GEM value
+  double w = .250;//530000;// Ohms per square
   double C = 0.21E-12;// 0.21pF/mm^2
   //double w = 250E-3;// in mm
   /*
@@ -35,14 +36,15 @@ double Qfuncs::PadRect(double tt, double xl, double xh, double yl, double yh, do
   double yl = par[2];//1;// in mm
   double yh = par[3];//7;// in mm
   */
-
   double Qpad;// = 1/Sqrt(4*t/(R*C)+2*Power(w,2));
+  double ttn=-999;
   if(tt>0)
     {
-      double S = Sqrt(4*(tt*Power(double(10),-9))/(R*C)+2*Power(w,2));
+      ttn=tt/double(1000000000);
+      double S = Sqrt(4*ttn/(R*C)+2*Power(w,2));
       double diffxErf = Erf(xh/S)-Erf(xl/S);
       double diffyErf = Erf(yh/S)-Erf(yl/S);      
-      Qpad = N/4 * ( diffxErf*diffyErf);
+      Qpad = N/double(4) * ( diffxErf*diffyErf );
     }
   else
     {
