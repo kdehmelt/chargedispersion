@@ -18,6 +18,11 @@ class quink;
 
 class aragorn
 {
+ private:
+  static float hw;    //half of the width of each pad
+  static float hh;    //half of the height of each pad
+  static int columns; //How many pads in a row
+  static int rows; // How many pads in each column
  public:
   static aragorn* instance()
   {
@@ -28,17 +33,19 @@ class aragorn
   virtual ~aragorn() {}
 
   std::vector <quink *> TheQuinks;
-  
-  static const int hw=1;    //half of the width of each pad
-  static const int hh=3;    //half of the height of each pad
-  static const int columns = 5; //How many pads in a row
-  static const int rows = 3; // How many pads in each column
-
+  void Sethw(double a){hw=a;}
+  void Sethh(double b){hh=b;}
+  void Setrow(int r){rows=r;}
+  void Setcol(int c){columns=c;}
   void Report();
   void Construct(); //
-  void Event();
+  void SingleEvent();
   void SetChargeCloud(double,double);
+  void Observe();
   void CheckPad(int);
+  void MakePRF();
+  void VaryResistance();
+  void Examine(vector< vector<double> >);
   aragorn();
   static aragorn *__instance;
 
