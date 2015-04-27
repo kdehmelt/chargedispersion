@@ -1,7 +1,9 @@
 #include <TF1.h>
 #include <TMath.h>
 #include <TCanvas.h>
+#include <TStopwatch.h>
 #include <TPad.h>
+#include <TFile.h>
 #include <TH1.h>
 #include "Math/Integrator.h"
 #include "RLAfuncs.cxx"
@@ -27,7 +29,7 @@ double Func_1(double *t, double *par) // The detector-response function
 double Func_2(double *t, double *par) // The charge dispersion function
 {
   double result;
-  result = Qfuncs::PadRect(t[0], par[0], par[1], par[2], par[3]);
+  result = Qfuncs::PadRect(t[0], par[0], par[1], par[2], par[3], par[4]);
   //result = Qfuncs::TestTri(t[0]);
   return result;
 }
@@ -47,10 +49,14 @@ Other than that, this is exactly the convolution code that
 Klaus has posted on the skipper physics link.
 */
 
-void ConvoluteLoop(double * maspar, double * relativepos)
+void ConvoluteLoop(double * maspar, double * relativepos, char name[], char filename[], char title[], bool newFile)
 {
   //unpacking the master parameter array. These are set in the parent class.
-  double w = 0.25;
+  TStopwatch clock;
+  clock.Start();
+  double R = maspar[5]; //75 micrometers in PowerPoint
+  if(newFile==true){TFile f(filename,"RECREATE");}
+  TFile f(filename,"UPDATE");
   int n = int(maspar[0]+.1);
   double tR = maspar[1];
   double sL = maspar[2];
@@ -66,14 +72,12 @@ void ConvoluteLoop(double * maspar, double * relativepos)
   fQ = new TF1("fQ", Func_2, tmin, tmax, 5);// 5 params: xl, xh, yl, yh, w
   // To be adjusted
   fRLA->SetParameters(tR, sL, tr, tf);//(double t_R, sigmaL, t_r, t_f)=(50.,13.,40.,2000.) all in ns
-  fQ->SetParameters(xl, xh, yl, yh, w);//(xl, xh, yl, yh)=(-1, 1, -3, 3) all in mm
+  fQ->SetParameters(xl, xh, yl, yh, R);//(xl, xh, yl, yh)=(-1, 1, -3, 3) all in mm
   fRLA->SetNpx(n);
   fQ->SetNpx(n);
   double tcplus = 0;
   double dt = (tmax-tmin)/double(n);
-  char name[40];
-  sprintf(name,"(%g,%g) to (%g,%g))",xl,yl,xh,yh);
-  TH1D *cumConv = new TH1D("Signal",name, n, tmin, tmax);
+  TH1D *cumConv = new TH1D(name,title, n, tmin, tmax);
   cumConv->Reset();
   TH1D *cumInt = new TH1D("cumInt", "", n, tmin, tmax);
   cumInt->Reset();
@@ -101,10 +105,15 @@ void ConvoluteLoop(double * maspar, double * relativepos)
       }
   }
       
-      cumConv->SetBinContent(iT, -maxInt);//cumInt->GetBinContent(n));
+      cumConv->SetBinContent(iT, maxInt);//cumInt->GetBinContent(n)); WE ARE HERE
     }
-  cumConv->SetBinContent(n, 1.0E-12);//cumInt->GetBinContent(n));
   cumConv->GetXaxis()->SetTitle("Time in ns");
-  cumConv->Draw();
-  cumConv->GetYaxis()->SetRangeUser(-3500,0);
+  cumConv->Write();
+  delete cumConv;
+  delete cumInt;
+  cumConv = NULL;
+  cumInt = NULL;
+  f.Close();
+  clock.Stop();
+  cout << " Overall time: "; clock.Print(); cout << endl;
 }
