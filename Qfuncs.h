@@ -33,7 +33,7 @@
 */
 
 namespace Qfuncs {
-  double PadRect(double tt=0, double xl=1, double xh=1, double yl=1, double yh=1, double w = 1);
+  double PadRect(double tt=0, double xl=1, double xh=1, double yl=1, double yh=1, double R = 1);
   double TestBox(double tt=0);
   double TestTri(double tt=0);
 }
